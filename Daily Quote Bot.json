@@ -1,0 +1,438 @@
+{
+  "name": "Daily Quote Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://api.quotable.io/random",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        256,
+        0
+      ],
+      "id": "cf01b57d-1837-448c-b80b-c3d61fa12420",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "chatIds": ""
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        384
+      ],
+      "id": "d770f3aa-8551-4320-bf34-e359d08175ca",
+      "name": "Telegram Trigger",
+      "webhookId": "f7a3f789-7c8d-48d6-8d67-2ae03b165362",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcy34SAjMyLFLxJF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2458fc92-da89-492f-9a04-c90609c2e3b3",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/quote",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "45f5a3e1-9599-47ac-96f9-1cf1a9ef7aee"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ff1a78bf-4b6c-46b7-8538-d8fc8360c411",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c93e2a31-5cac-4678-af88-3079ce726f72",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/quit",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        32,
+        336
+      ],
+      "id": "4386991e-af29-461c-a8e6-468e1bc04a88",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "*Halo derr.*\n\nBerikut adalah perintah yang bisa kamu gunakan:\n/quote - Memberikan kata-kata hari ini der.\n/help - Menampilkan menu bantuan sekarang.\n/quit - Mengakhiri percakapan.\n\nSemoga yang disemogakan tercapai.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        384
+      ],
+      "id": "6170eed8-405a-4186-9639-bc9d6119012a",
+      "name": "help",
+      "webhookId": "954a594a-4026-404a-8ffd-7f1e8ba956b6",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcy34SAjMyLFLxJF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Keluar dah\n\nKetik:\n/quote\n/help",
+        "replyMarkup": "replyKeyboardRemove",
+        "replyKeyboardRemove": {
+          "remove_keyboard": true
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        576
+      ],
+      "id": "eafc9f34-fddb-40ba-8158-020206c7c81c",
+      "name": "quit",
+      "webhookId": "1f099ed4-cc27-4509-8bb5-c604d3b1fb00",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcy34SAjMyLFLxJF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Sori der, cuma ngarti \n/quote\n/help\n/quit\nCoba diketik yeee",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        768
+      ],
+      "id": "c81c8a8d-2dcd-404a-950c-d80dd697a411",
+      "name": "false",
+      "webhookId": "22a29d3d-82b2-46a5-8e91-48b9ec41dc70",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcy34SAjMyLFLxJF",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Welcomee derr  *{{ $('Telegram Trigger').item.json.message.chat.first_name }}*\nSilakan klik menu di bawah atau ketik \n/help untuk melihat apa saja yang bisa saya lakukan.\n\nSiap ga buat kata-kata pertama hari ini der? Ketik /quote yee!",
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "/quote",
+                    "additionalFields": {}
+                  },
+                  {
+                    "text": "/help",
+                    "additionalFields": {}
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "replyKeyboardOptions": {
+          "resize_keyboard": true,
+          "one_time_keyboard": true
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        192
+      ],
+      "id": "53d755f5-5945-4f48-b893-d71713f835d8",
+      "name": "Startt",
+      "webhookId": "726bf5a1-49b1-401c-a4e2-0ff39f8ed715",
+      "credentials": {
+        "telegramApi": {
+          "id": "fucJ2RQoVVXBvEWt",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://picsum.photos/1000/1000?random={{ $now.timestamp }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        432,
+        0
+      ],
+      "id": "1d5dd5be-1193-45c4-bfec-44d7ebf89664",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "={{ $('HTTP Request').item.json.content }}\n-{{ $('HTTP Request').item.json.author }}"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "6b32e7f7-3877-494b-884a-a3a63a843e05",
+      "name": "Send a photo message",
+      "webhookId": "495792ab-e094-472a-908f-c6b44fc2ea28",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcy34SAjMyLFLxJF",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 762799534,
+          "message": {
+            "message_id": 70,
+            "from": {
+              "id": 5695681939,
+              "is_bot": false,
+              "first_name": "urdsss",
+              "language_code": "id"
+            },
+            "chat": {
+              "id": 5695681939,
+              "first_name": "urdsss",
+              "type": "private"
+            },
+            "date": 1771835086,
+            "text": "/quote",
+            "entities": [
+              {
+                "offset": 0,
+                "length": 6,
+                "type": "bot_command"
+              }
+            ]
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Startt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "quit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7c9b6d22-9087-474d-86e4-632ca41b9d9b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "580ed7c609cf056d2e21381cb4b021aa456c73bf9a88ae8d30606fa7a134202a"
+  },
+  "id": "rXc1moR6GC83qWEM",
+  "tags": []
+}
