@@ -28,6 +28,24 @@ An automated Telegram bot built with **n8n** that delivers daily inspiration. Th
 4. Set the `Chat ID` in the Telegram nodes.
 5. Execute and Enjoy!
 
+## 🛠️ Step-by-Step Setup
+
+### 1. Create Telegram Bot API Token
+1. Open Telegram and search for **@BotFather**.
+2. Send the command `/newbot` and follow the instructions to name your bot.
+3. Copy the **API Token** provided (e.g., `123456789:ABCDefGh...`).
+4. **Safety Note:** Never share this token publicly!
+
+### 2. Resources Used
+To make this bot work, I used the following public APIs:
+- **Quotes API:** [Quotable API](https://api.quotable.io/random) - Used for fetching randomized inspirational quotes.
+- **Image API:** [Picsum Photos](https://picsum.photos/) - Used for high-quality random background images.
+- **Platform:** [n8n Cloud/Self-hosted](https://n8n.io/) - The brain that connects all services.
+
+### 3. Detailed Workflow Configuration
+- **Command Router:** A `Switch` node that filters incoming text commands like `/start` or `/quote`.
+- **Image Fetcher:** An `HTTP Request` node set to `Response Format: File` to handle binary image data.
+- **Content Delivery:** A `Telegram` node using the `Send Photo` operation to merge the image and the quote as a caption.
 ---
 *This project is part of my journey in mastering **System Automation** and **Network Administration**. I am also currently working on Python-based projects like **AI Smart Cleaner** and exploring network topologies in **Cisco Packet Tracer**.*
 
